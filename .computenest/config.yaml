@@ -1,0 +1,76 @@
+Service:
+  RegionId: cn-hangzhou
+  DeployType: ros
+  OperationMetadata:
+    StatusOperationConfigs:
+      - TemplateName: ECS
+        SupportOperations:
+          - Start
+          - Stop
+          - Restart
+    SupportBackup: true
+    ##变配部分
+    ModifyParametersConfig:
+      - TemplateName: ECS
+        Operation:
+          - Name: 修改游戏参数
+            Description: 修改游戏参数
+            Type: Custom
+            Parameters:
+              - ServerName
+              - ServerPassword
+          - Name: 变更ECS实例规格
+            Description: 变更ECS实例规格
+            Type: Custom
+            Parameters:
+              - EcsInstanceType
+          - Name: 变更ECS实例密码
+            Description: 变更ECS实例密码
+            Type: Custom
+            Parameters:
+              - InstancePassword
+  #部署相关
+  DeployMetadata:
+    SupplierDeployMetadata:
+      SupplierTemplateConfigs:
+        - Name: ECS
+          Url: 'ros_templates/template.yaml'
+          ArchitectureDiagramUrl: 'resources/architecture/architecture.jpg'
+          AllowedRegions:
+            - ap-southeast-1
+      ArtifactRelation:
+        windows:
+          ArtifactId: ${Artifact.EcsImage.ArtifactId}
+          ArtifactVersion: draft
+    TemplateConfigs:
+      - Name: ECS
+        Url: 'ros_templates/template.yaml'
+        ArchitectureDiagramUrl: 'resources/architecture/architecture.jpg'
+        AllowedRegions:
+          - ap-southeast-1
+  ServiceType: private
+  ServiceInfo:
+    # 英文版可以再配置Locale为en-US的服务信息
+    - Locale: zh-CN
+      ShortDescription: demo
+      Image: 'resources/icons/service_logo.png'
+#部署物信息相关
+Artifact:
+  EcsImage:
+    ArtifactType: EcsImage
+    ArtifactName: wusuo
+    Description: Enshrouded_image
+    SupportRegionIds:
+      - ap-southeast-1
+    ArtifactBuildProperty:
+      CodeRepo:
+        Platform: github
+        Owner: LYH-RAIN
+        RepoName: aliyun-computenest/quickstart-enshrouded
+        Branch: main
+      RegionId: ap-southeast-1
+      CommandType: RunShellScript
+      SourceImageId: "m-t4n7hdik5d6zppvw5u9u"
+      ## 此处的命令要求是从0构建一个全新的软件；或是从之前的镜像通过更新构建出最新的软件。
+      CommandContent: |-
+        Start-Process "C:\Program Files\EnshroudedServer\steam\steamcmd.exe" -ArgumentList "+login anonymous +app_update 2278520 validate +quit" -Wait

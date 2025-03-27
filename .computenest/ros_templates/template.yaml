@@ -1,0 +1,349 @@
+ROSTemplateFormatVersion: '2015-09-01'
+Description:
+  en: Deploy enshrouded service
+  zh-cn: 部署雾锁王国游戏服务
+Parameters:
+  PayType:
+    Type: String
+    Label:
+      en: ECS Instance Charge Type
+      zh-cn: 付费类型
+    AssociationProperty: ChargeType
+    AssociationPropertyMetadata:
+      LocaleKey: InstanceChargeType
+    Default: PrePaid
+    AllowedValues:
+      - PostPaid
+      - PrePaid
+  PayPeriodUnit:
+    Type: String
+    Label:
+      en: Pay Period Unit
+      zh-cn: 购买资源时长周期
+    AssociationProperty: PayPeriodUnit
+    AssociationPropertyMetadata:
+      ValueLabelMapping:
+        Month: 月
+      Visible:
+        Condition:
+          Fn::Not:
+            Fn::Equals:
+              - ${PayType}
+              - PostPaid
+    Default: Month
+    AllowedValues:
+      - Month
+  PayPeriod:
+    Type: Number
+    Label:
+      en: Period
+      zh-cn: 购买资源时长
+    AssociationProperty: PayPeriod
+    AssociationPropertyMetadata:
+      Visible:
+        Condition:
+          Fn::Not:
+            Fn::Equals:
+              - ${PayType}
+              - PostPaid
+    Default: 1
+    AllowedValues:
+      - 1
+      - 3
+      - 6
+  EcsInstanceType:
+    Type: String
+    Label:
+      en: Instance Type
+      zh-cn: 实例类型
+    AssociationProperty: ALIYUN::ECS::Instance::InstanceType
+    AssociationPropertyMetadata:
+      ZoneId: ${ZoneId}
+      InstanceChargeType: ${PayType}
+  SystemDiskCategory:
+    Type: String
+    AllowedValues:
+      - cloud_efficiency
+      - cloud_essd
+      - cloud_essd_entry
+    Label:
+      en: System Disk Category
+      zh-cn: 系统盘类型
+    AssociationPropertyMetadata:
+      LocaleKey: DiskCategory
+  SystemDiskSize:
+    Type: Number
+    Label:
+      zh-cn: 系统盘空间 (GB)
+      en: System Disk Space (GB)
+    MinValue: 40
+    MaxValue: 2000
+  InternetChargeType:
+    Type: String
+    Label:
+      zh-cn: 带宽付费类型
+      en: Internet Charge Type
+    AssociationPropertyMetadata:
+      ValueLabelMapping:
+        PayByTraffic: 按流量计费
+        PayByBandwidth: 按固定带宽计费
+    AllowedValues:
+      - PayByBandwidth
+      - PayByTraffic
+  InternetMaxBandwidthOut:
+    Type: Number
+    Label:
+      zh-cn: 公网带宽 (Mbps)
+      en: Internet Max Bandwidth Out (Mbps)
+    MinValue: 1
+    MaxValue: 100
+  InstancePassword:
+    Type: String
+    Label:
+      en: Instance Password
+      zh-cn: 实例密码
+    Description:
+      en: Server login password, Length 8-30, must contain three(Capital letters,
+        lowercase letters, numbers, ()`~!@#$%^&*_-+=|{}[]:;'<>,.?/ Special symbol
+        in)
+      zh-cn: 服务器登录密码,长度8-30，必须包含三项（大写字母、小写字母、数字、 ()`~!@#$%^&*_-+=|{}[]:;'<>,.?/ 中的特殊符号）
+    ConstraintDescription:
+      en: Length 8-30, must contain three(Capital letters, lowercase letters, numbers,
+        ()`~!@#$%^&*_-+=|{}[]:;'<>,.?/ Special symbol in)
+      zh-cn: 长度8-30，必须包含三项（大写字母、小写字母、数字、 ()`~!@#$%^&*_-+=|{}[]:;'<>,.?/ 中的特殊符号）
+    AssociationProperty: ALIYUN::ECS::Instance::Password
+    MinLength: 8
+    MaxLength: 30
+    NoEcho: true
+  ZoneId:
+    Type: String
+    Label:
+      en: Availability Zone
+      zh-cn: 可用区
+    AssociationProperty: ALIYUN::ECS::Instance::ZoneId
+    AssociationPropertyMetadata:
+      DefaultValueStrategy: diamond
+  ServerName:
+    Type: String
+    Label:
+      en: Server Name
+      zh-cn: 服务器登录名
+    Description:
+      en: The server name used for searching when joining an online server; set a memorable name!
+      zh-cn: 加入在线服务器时用于搜索的服务器名称，设置一个好记的名称吧！
+    AllowedPattern: '^[A-Za-z0-9\ \-_]*$'
+    AssociationProperty: AutoCompleteInput
+    AssociationPropertyMetadata:
+      Prefix: server-
+      Pattern: '[a-zA-Z]*'
+    ConstraintDescription:
+      zh-cn: '中文、中英文字母、空格、横线、下划线，不超过 32 个字符'
+      en: >-
+        Supports only: Chinese characters, Chinese and English letters, spaces, hyphens, and underscores, and must not exceed 32 characters.
+  ServerPassword:
+    Type: String
+    Label:
+      en: Server Description
+      zh-cn: 游戏密码
+    Description:
+      en: After setting a password, joining the game server will require entering the password, which can prevent unknown players from joining.
+      zh-cn: 设置密码后，加入游戏服务器需要输入密码，可以防止陌生玩家加入。
+    NoEcho: true
+Resources:
+  EcsVpc:
+    Type: ALIYUN::ECS::VPC
+    Properties:
+      CidrBlock: 192.168.0.0/16
+      VpcName:
+        Ref: ALIYUN::StackName
+  EcsVSwitch:
+    Type: ALIYUN::ECS::VSwitch
+    Properties:
+      ZoneId:
+        Ref: ZoneId
+      VpcId:
+        Ref: EcsVpc
+      CidrBlock: 192.168.1.0/24
+  EcsSecurityGroup:
+    Type: ALIYUN::ECS::SecurityGroup
+    Properties:
+      VpcId:
+        Ref: EcsVpc
+      SecurityGroupIngress:
+        - PortRange: 3389/3389
+          Priority: 1
+          SourceCidrIp: 0.0.0.0/0
+          IpProtocol: tcp
+        - PortRange: 22/22
+          Priority: 1
+          SourceCidrIp: 0.0.0.0/0
+          IpProtocol: tcp
+        - PortRange: 15636/15637
+          Priority: 1
+          SourceCidrIp: 0.0.0.0/0
+          IpProtocol: udp
+        - PortRange: 15636/15637
+          Priority: 1
+          SourceCidrIp: 0.0.0.0/0
+          IpProtocol: tcp
+  WindowsEcsInstanceGroup:
+    Type: ALIYUN::ECS::InstanceGroup
+    Properties:
+      ZoneId:
+        Ref: ZoneId
+      VpcId:
+        Ref: EcsVpc
+      VSwitchId:
+        Ref: EcsVSwitch
+      SecurityGroupId:
+        Ref: EcsSecurityGroup
+      ImageId: windows
+      IoOptimized: optimized
+      InstanceChargeType:
+        Ref: PayType
+      PeriodUnit:
+        Ref: PayPeriodUnit
+      Period:
+        Ref: PayPeriod
+      SystemDiskCategory:
+        Ref: SystemDiskCategory
+      SystemDiskSize:
+        Ref: SystemDiskSize
+      MaxAmount: 1
+      InstanceType:
+        Ref: EcsInstanceType
+      Password:
+        Ref: InstancePassword
+      InternetMaxBandwidthOut:
+        Ref: InternetMaxBandwidthOut
+      InternetChargeType:
+        Ref: InternetChargeType
+      InstanceName:
+        Fn::Join:
+          - '-'
+          - - Ref: ALIYUN::StackName
+            - '[1,4]'
+      UserData: |
+        [powershell]
+  InstanceRunCommandForWindows:
+    Type: ALIYUN::ECS::RunCommand
+    DependsOn:
+      - WindowsEcsInstanceGroup
+    Properties:
+      Type: RunPowerShellScript
+      Sync: true
+      InstanceIds:
+        Fn::GetAtt:
+          - WindowsEcsInstanceGroup
+          - InstanceIds
+      Timeout: 7200
+      CommandContent:
+        Fn::Sub:
+          - |
+
+            $TaskName = "EnshroudedServerAutoStart"
+            $ProcessName = "enshrouded_server"
+
+            if (Get-Process -Name $ProcessName -ErrorAction SilentlyContinue) {
+              Stop-Process -Name $ProcessName -Force
+              Start-Sleep -Seconds 1
+            }
+            Start-Process "C:\Program Files\EnshroudedServer\steam\steamcmd.exe" -ArgumentList "+login anonymous +app_update 2278520 validate +quit" -Wait
+
+            $destPath = "C:\Program Files\EnshroudedServer\steam\steamapps\common\EnshroudedServer\enshrouded_server.json"
+            Set-Location "C:\Program Files\EnshroudedServer\steam\steamapps\common\EnshroudedServer\"
+            # Creating a list of settings to replace
+            $settingsToReplace = @{
+              "name" = "${ServerName}"
+              "password" = "${ServerPassword}"
+            }
+
+            $jsonContent = Get-Content -Path $destPath -Raw | ConvertFrom-Json
+
+            foreach ($key in $settingsToReplace.Keys) {
+              if ($jsonContent.PSObject.Properties.Name -contains $key) {
+                $jsonContent.$key = $settingsToReplace[$key]
+              }
+            }
+
+            $jsonString = $jsonContent | ConvertTo-Json -Depth 100
+
+            Set-Content -Path $destPath -Value $jsonString
+
+            $TaskName = "EnshroudedServerAutoStart"
+            Start-ScheduledTask -TaskName $TaskName
+          - ServerName:
+              Ref: ServerName
+Outputs:
+  windowsGameEndpoint:
+    Label:
+      zh-cn: 雾锁王国服务器地址-游戏端口
+      en: Service Addresses
+    Value:
+      Fn::Sub:
+        - ${ServerAddress}:15636
+        - ServerAddress:
+            Fn::Select:
+              - 0
+              - Fn::GetAtt:
+                  - WindowsEcsInstanceGroup
+                  - PublicIps
+  windowsQueryEndpoint:
+    Label:
+      zh-cn: 雾锁王国服务器地址-查询端口
+      en: Service Addresses
+    Value:
+      Fn::Sub:
+        - ${ServerAddress}:15637
+        - ServerAddress:
+            Fn::Select:
+              - 0
+              - Fn::GetAtt:
+                  - WindowsEcsInstanceGroup
+                  - PublicIps
+  serverName:
+    Label:
+      zh-cn: 雾锁王国服务器名称
+      en: Server Name
+    Value:
+      Ref: ServerName
+  document:
+    Label:
+      zh-cn: 操作说明
+      en: operation detail
+    Value: 登录您的Steam账号后打开雾锁王国游戏并点击开始，输入服务器名称
+Metadata:
+  ALIYUN::ROS::Interface:
+    ParameterGroups:
+      - Parameters:
+          - PayType
+          - PayPeriodUnit
+          - PayPeriod
+        Label:
+          default:
+            en: PayType Configuration
+            zh-cn: 付费类型配置
+      - Parameters:
+          - EcsInstanceType
+          - InternetChargeType
+          - InternetMaxBandwidthOut
+          - SystemDiskCategory
+          - SystemDiskSize
+          - InstancePassword
+        Label:
+          default:
+            zh-cn: ECS实例配置
+            en: ECS Instance Configuration
+      - Parameters:
+          - ZoneId
+        Label:
+          default:
+            zh-cn: 可用区配置
+            en: Zone Configuration
+      - Parameters:
+          - ServerName
+          - ServerPassword
+        Label:
+          default:
+            zh-cn: 游戏参数配置
+            en: Server Configuration

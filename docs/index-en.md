@@ -1,51 +1,4 @@
-<!DOCTYPE html>
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="计算巢是阿里云开放给企业应用服务商的服务管理平台。服务商能够在计算巢上发布私有化部署服务，为其客户提供云上软件一键部署的能力；同时也支持全托管模式的服务，赋能服务商托管其客户资源。">
-  <title>Index en - Aliyun 计算巢 x Demo</title>
-
-  <link rel="shortcut icon" href="../img/favicon.ico">
-
-  <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css">
-  <link rel="stylesheet" href="../css/theme.css">
-  
-
-  
-
-  
-  
-
-  
-    <script src="../search/main.js"></script>
-  
-
-  
-
-  <script src="../js/highlight.min.js"></script>
-  <script>hljs.highlightAll();</script>
-</head>
-
-<body>
-  <div class="container">
-    <div class="nav">
-      <div class="nav-inner">
-        <div class="logo">
-          <img src="./img/logo-2x.png">
-        </div>
-        <div class="nav-list">
-          <ul>
-          
-          </ul>
-        </div>
-      </div>
-    </div>
-    <div class="content theme-github">
-      
-      <div class="content-inner">        
-        
-        <h1> Deploy Fog Lock Kingdom online service in 3 minutes </h1>
+<h1> Deploy Fog Lock Kingdom online service in 3 minutes </h1>
 
 <h2> Overview </h2>
 
@@ -115,16 +68,3 @@ The estimated cost can be seen in real time when the instance is created. </p>
 
 <li><p> Find the fog lock kingdom in the "library" and start the game. </p></li>
 </ol>
-        
-      </div>
-
-      <div class="copyrights">© 2009-2022 Aliyun.com 版权所有</div>
-    </div>
-  </div>
-  
-  <!--
-  MkDocs version      : 1.6.0
-  Docs Build Date UTC : 2024-07-08 07:21:02.906222+00:00
-  -->
-</body>
-</html>
