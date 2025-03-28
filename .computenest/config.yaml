@@ -2,6 +2,21 @@ Service:
   RegionId: cn-hangzhou
   DeployType: ros
   OperationMetadata:
+    # 自定义运维操作
+    CustomOperations:
+      Actions:
+        - Type: OOS
+          Name: 升级服务端版本
+          Operator: All
+          TemplateNames:
+            - ECS
+          TemplateUrl: custom_operations/upgrade_server_version.yaml
+        - Type: OOS
+          Name: 重启服务
+          Operator: All
+          TemplateNames:
+            - ECS
+          TemplateUrl: custom_operations/restart_server.yaml
     StatusOperationConfigs:
       - TemplateName: ECS
         SupportOperations:
@@ -60,17 +75,18 @@ Artifact:
     ArtifactType: EcsImage
     ArtifactName: wusuo
     Description: Enshrouded_image
-    SupportRegionIds:
-      - ap-southeast-1
-    ArtifactBuildProperty:
-      CodeRepo:
-        Platform: github
-        Owner: LYH-RAIN
-        RepoName: aliyun-computenest/quickstart-enshrouded
-        Branch: main
-      RegionId: ap-southeast-1
-      CommandType: RunShellScript
-      SourceImageId: "m-t4n7hdik5d6zppvw5u9u"
-      ## 此处的命令要求是从0构建一个全新的软件；或是从之前的镜像通过更新构建出最新的软件。
-      CommandContent: |-
-        Start-Process "C:\Program Files\EnshroudedServer\steam\steamcmd.exe" -ArgumentList "+login anonymous +app_update 2278520 validate +quit" -Wait
+    ArtifactProperty:
+      RegionId: ${ImageBuilder.EcsImage.RegionId}
+      ImageId: ${ImageBuilder.EcsImage.SourceImageId}
+ImageBuilder:
+  EcsImage:
+    RegionId: ap-southeast-1
+    SourceImageId: m-t4nao7n69ed5vvcmevl7
+    SystemDiskSize: 100
+    InstanceType: ecs.g7.large
+    InternetMaxBandwidthOut: 100
+    CommandType: RunPowerShellScript
+    Timeout: 10800
+    CommandContent: |-
+      Start-Process "C:\Program Files\EnshroudedServer\steam\steamcmd.exe" -ArgumentList "+login anonymous +app_update 2278520 validate +quit" -Wait
+
