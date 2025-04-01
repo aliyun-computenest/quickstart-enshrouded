@@ -51,8 +51,40 @@ Service:
         - Name: ECS
           Url: 'ros_templates/template.yaml'
           ArchitectureDiagramUrl: 'resources/architecture/architecture.jpg'
+          PredefinedParameters:
+            - Name: 热卖：最多支持4个玩家畅玩
+              OrderList:
+                - PayType
+                - EcsInstanceType
+              Type: Normal
+              Parameters:
+                PayType: PrePaid
+                EcsInstanceType:
+                  - ecs.e-c1m4.2xlarge
+                SystemDiskCategory: cloud_essd_entry
+                SystemDiskSize: 100
+                InternetChargeType: PayByBandwidth
+                InternetMaxBandwidthOut: 10
+            - Name: 自定义套餐
+              OrderList:
+                - PayType
+                - EcsInstanceType
+              Type: Custom
+              Parameters: {}
           AllowedRegions:
-            - ap-southeast-1
+            - cn-hangzhou
+            - cn-qingdao
+            - cn-beijing
+            - cn-zhangjiakou
+            - cn-huhehaote
+            - cn-wulanchabu
+            - cn-chengdu
+            - cn-shanghai
+            - cn-nanjing
+            - cn-fuzhou
+            - cn-shenzhen
+            - cn-guangzhou
+            - cn-heyuan
       ArtifactRelation:
         windows:
           ArtifactId: ${Artifact.EcsImage.ArtifactId}
@@ -62,12 +94,24 @@ Service:
         Url: 'ros_templates/template.yaml'
         ArchitectureDiagramUrl: 'resources/architecture/architecture.jpg'
         AllowedRegions:
-          - ap-southeast-1
+          - cn-hangzhou
+          - cn-qingdao
+          - cn-beijing
+          - cn-zhangjiakou
+          - cn-huhehaote
+          - cn-wulanchabu
+          - cn-chengdu
+          - cn-shanghai
+          - cn-nanjing
+          - cn-fuzhou
+          - cn-shenzhen
+          - cn-guangzhou
+          - cn-heyuan
   ServiceType: private
   ServiceInfo:
     # 英文版可以再配置Locale为en-US的服务信息
     - Locale: zh-CN
-      ShortDescription: demo
+      ShortDescription: 《雾锁王国（Enshrouded）》融合了生存、制作以及动作 RPG 战斗，游戏背景设定在了一个基于体素构筑的辽阔大陆。无论是攀登山脉还是跨越沙漠，玩家将可以在这个开放世界中自由选择前进的方向并塑造自己的命运。
       Image: 'resources/icons/service_logo.jpeg'
 #部署物信息相关
 Artifact:
@@ -80,8 +124,8 @@ Artifact:
       ImageId: ${ImageBuilder.EcsImage.SourceImageId}
 ImageBuilder:
   EcsImage:
-    RegionId: ap-southeast-1
-    SourceImageId: m-t4nao7n69ed5vvcmevl7
+    RegionId: cn-hangzhou
+    SourceImageId: m-bp1hlz3v7jtvv3wgqteo
     SystemDiskSize: 100
     InstanceType: ecs.g7.large
     InternetMaxBandwidthOut: 100
