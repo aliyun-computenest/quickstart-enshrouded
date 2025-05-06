@@ -1,0 +1,11 @@
+parameters:
+  InternetMaxBandwidthOut: "5"
+  SystemDiskSize: "100"
+  ServerName: "test-test"
+  ServerPassword: "test123A"
+  PayType: "PostPaid"
+  EcsInstanceType: "ecs.e-c1m4.2xlarge"
+  SystemDiskCategory: "cloud_essd"
+  InternetChargeType: "PayByTraffic"
+  InstancePassword: "$[iact3-auto]"
+templateName: ECS单机版
