@@ -124,13 +124,22 @@ Artifact:
       ImageId: ${ImageBuilder.EcsImage.SourceImageId}
 ImageBuilder:
   EcsImage:
-    RegionId: cn-hangzhou
-    SourceImageId: m-bp1hlz3v7jtvv3wgqteo
+    RegionId: cn-heyuan
+    SourceImageId: m-f8z3t8e3rsgpznaoc232
     SystemDiskSize: 100
     InstanceType: ecs.g7.large
     InternetMaxBandwidthOut: 100
     CommandType: RunPowerShellScript
     Timeout: 10800
     CommandContent: |-
-      Start-Process "C:\Program Files\EnshroudedServer\steam\steamcmd.exe" -ArgumentList "+login anonymous +app_update 2278520 validate +quit" -Wait
+        $TaskName = "EnshroudedServerAutoStart"
+        $ProcessName = "enshrouded_server"
 
+        if (Get-Process -Name $ProcessName -ErrorAction SilentlyContinue) {
+          Stop-Process -Name $ProcessName -Force
+          Start-Sleep -Seconds 1
+        }
+        Start-Process "C:\Program Files\EnshroudedServer\steam\steamcmd.exe" -ArgumentList "+login anonymous +app_update 2278520 validate +quit" -Wait
+
+        Start-ScheduledTask -TaskName $TaskName
+        Get-ScheduledTask -TaskName $TaskName
