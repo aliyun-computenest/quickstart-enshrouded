@@ -8,4 +8,4 @@ parameters:
   SystemDiskCategory: "cloud_essd"
   InternetChargeType: "PayByTraffic"
   InstancePassword: "$[iact3-auto]"
-templateName: ECS单机版
+templateName: ECS

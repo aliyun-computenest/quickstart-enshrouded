@@ -5,115 +5,115 @@ Service:
     # 自定义运维操作
     CustomOperations:
       Actions:
-        - Type: OOS
-          Name: 升级服务端版本
-          Operator: All
-          TemplateNames:
-            - ECS
-          TemplateUrl: custom_operations/upgrade_server_version.yaml
-        - Type: OOS
-          Name: 重启服务
-          Operator: All
-          TemplateNames:
-            - ECS
-          TemplateUrl: custom_operations/restart_server.yaml
+      - Type: OOS
+        Name: 升级服务端版本
+        Operator: All
+        TemplateNames:
+        - ECS
+        TemplateUrl: custom_operations/upgrade_server_version.yaml
+      - Type: OOS
+        Name: 重启服务
+        Operator: All
+        TemplateNames:
+        - ECS
+        TemplateUrl: custom_operations/restart_server.yaml
     StatusOperationConfigs:
-      - TemplateName: ECS
-        SupportOperations:
-          - Start
-          - Stop
-          - Restart
+    - TemplateName: ECS
+      SupportOperations:
+      - Start
+      - Stop
+      - Restart
     SupportBackup: true
     ##变配部分
     ModifyParametersConfig:
-      - TemplateName: ECS
-        Operation:
-          - Name: 修改游戏参数
-            Description: 修改游戏参数
-            Type: Custom
-            Parameters:
-              - ServerName
-              - ServerPassword
-          - Name: 变更ECS实例规格
-            Description: 变更ECS实例规格
-            Type: Custom
-            Parameters:
-              - EcsInstanceType
-          - Name: 变更ECS实例密码
-            Description: 变更ECS实例密码
-            Type: Custom
-            Parameters:
-              - InstancePassword
+    - TemplateName: ECS
+      Operation:
+      - Name: 修改游戏参数
+        Description: 修改游戏参数
+        Type: Custom
+        Parameters:
+        - ServerName
+        - ServerPassword
+      - Name: 变更ECS实例规格
+        Description: 变更ECS实例规格
+        Type: Custom
+        Parameters:
+        - EcsInstanceType
+      - Name: 变更ECS实例密码
+        Description: 变更ECS实例密码
+        Type: Custom
+        Parameters:
+        - InstancePassword
   #部署相关
   DeployMetadata:
     SupplierDeployMetadata:
       SupplierTemplateConfigs:
-        - Name: ECS
-          Url: 'ros_templates/template.yaml'
-          ArchitectureDiagramUrl: 'resources/architecture/architecture.jpg'
-          PredefinedParameters:
-            - Name: 热卖：最多支持4个玩家畅玩
-              OrderList:
-                - PayType
-                - EcsInstanceType
-              Type: Normal
-              Parameters:
-                PayType: PrePaid
-                EcsInstanceType:
-                  - ecs.e-c1m4.2xlarge
-                SystemDiskCategory: cloud_essd_entry
-                SystemDiskSize: 100
-                InternetChargeType: PayByBandwidth
-                InternetMaxBandwidthOut: 10
-            - Name: 自定义套餐
-              OrderList:
-                - PayType
-                - EcsInstanceType
-              Type: Custom
-              Parameters: {}
-          AllowedRegions:
-            - cn-hangzhou
-            - cn-qingdao
-            - cn-beijing
-            - cn-zhangjiakou
-            - cn-huhehaote
-            - cn-wulanchabu
-            - cn-chengdu
-            - cn-shanghai
-            - cn-nanjing
-            - cn-fuzhou
-            - cn-shenzhen
-            - cn-guangzhou
-            - cn-heyuan
+      - Name: ECS
+        Url: 'ros_templates/template.yaml'
+        ArchitectureDiagramUrl: 'resources/architecture/architecture.jpg'
+        PredefinedParameters:
+        - Name: 热卖：最多支持4个玩家畅玩
+          OrderList:
+          - PayType
+          - EcsInstanceType
+          Type: Normal
+          Parameters:
+            PayType: PrePaid
+            EcsInstanceType:
+            - ecs.e-c1m4.2xlarge
+            SystemDiskCategory: cloud_essd_entry
+            SystemDiskSize: 100
+            InternetChargeType: PayByBandwidth
+            InternetMaxBandwidthOut: 10
+        - Name: 自定义套餐
+          OrderList:
+          - PayType
+          - EcsInstanceType
+          Type: Custom
+          Parameters: {}
+        AllowedRegions:
+        - cn-hangzhou
+        - cn-qingdao
+        - cn-beijing
+        - cn-zhangjiakou
+        - cn-huhehaote
+        - cn-wulanchabu
+        - cn-chengdu
+        - cn-shanghai
+        - cn-nanjing
+        - cn-fuzhou
+        - cn-shenzhen
+        - cn-guangzhou
+        - cn-heyuan
       ArtifactRelation:
         windows:
           ArtifactId: ${Artifact.EcsImage.ArtifactId}
           ArtifactVersion: draft
     TemplateConfigs:
-      - Name: ECS
-        Url: 'ros_templates/template.yaml'
-        ArchitectureDiagramUrl: 'resources/architecture/architecture.jpg'
-        AllowedRegions:
-          - cn-hangzhou
-          - cn-qingdao
-          - cn-beijing
-          - cn-zhangjiakou
-          - cn-huhehaote
-          - cn-wulanchabu
-          - cn-chengdu
-          - cn-shanghai
-          - cn-nanjing
-          - cn-fuzhou
-          - cn-shenzhen
-          - cn-guangzhou
-          - cn-heyuan
+    - Name: ECS
+      Url: 'ros_templates/template.yaml'
+      ArchitectureDiagramUrl: 'resources/architecture/architecture.jpg'
+      AllowedRegions:
+      - cn-hangzhou
+      - cn-qingdao
+      - cn-beijing
+      - cn-zhangjiakou
+      - cn-huhehaote
+      - cn-wulanchabu
+      - cn-chengdu
+      - cn-shanghai
+      - cn-nanjing
+      - cn-fuzhou
+      - cn-shenzhen
+      - cn-guangzhou
+      - cn-heyuan
   ServiceType: private
   ServiceInfo:
     # 英文版可以再配置Locale为en-US的服务信息
-    - Locale: zh-CN
-      ShortDescription: 《雾锁王国（Enshrouded）》融合了生存、制作以及动作 RPG 战斗，游戏背景设定在了一个基于体素构筑的辽阔大陆。无论是攀登山脉还是跨越沙漠，玩家将可以在这个开放世界中自由选择前进的方向并塑造自己的命运。
-      Image: 'resources/icons/service_logo.jpeg'
-#部署物信息相关
+  - Locale: zh-CN
+    Name: 雾锁王国-快速部署
+    ShortDescription: 《雾锁王国（Enshrouded）》融合了生存、制作以及动作 RPG 战斗，游戏背景设定在了一个基于体素构筑的辽阔大陆。无论是攀登山脉还是跨越沙漠，玩家将可以在这个开放世界中自由选择前进的方向并塑造自己的命运。
+    Image: resources/icons/service_logo.jpeg
 Artifact:
   EcsImage:
     ArtifactType: EcsImage
@@ -132,14 +132,14 @@ ImageBuilder:
     CommandType: RunPowerShellScript
     Timeout: 10800
     CommandContent: |-
-        $TaskName = "EnshroudedServerAutoStart"
-        $ProcessName = "enshrouded_server"
+      $TaskName = "EnshroudedServerAutoStart"
+      $ProcessName = "enshrouded_server"
 
-        if (Get-Process -Name $ProcessName -ErrorAction SilentlyContinue) {
-          Stop-Process -Name $ProcessName -Force
-          Start-Sleep -Seconds 1
-        }
-        Start-Process "C:\Program Files\EnshroudedServer\steam\steamcmd.exe" -ArgumentList "+login anonymous +app_update 2278520 validate +quit" -Wait
+      if (Get-Process -Name $ProcessName -ErrorAction SilentlyContinue) {
+        Stop-Process -Name $ProcessName -Force
+        Start-Sleep -Seconds 1
+      }
+      Start-Process "C:\Program Files\EnshroudedServer\steam\steamcmd.exe" -ArgumentList "+login anonymous +app_update 2278520 validate +quit" -Wait
 
-        Start-ScheduledTask -TaskName $TaskName
-        Get-ScheduledTask -TaskName $TaskName
+      Start-ScheduledTask -TaskName $TaskName
+      Get-ScheduledTask -TaskName $TaskName
