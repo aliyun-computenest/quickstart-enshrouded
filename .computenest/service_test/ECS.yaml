@@ -1,3 +1,5 @@
+caseId: stc-47844213f9c741288c1d
+templateName: ECS
 parameters:
   InternetMaxBandwidthOut: "5"
   SystemDiskSize: "100"
@@ -8,4 +10,3 @@ parameters:
   SystemDiskCategory: "cloud_essd"
   InternetChargeType: "PayByTraffic"
   InstancePassword: "$[iact3-auto]"
-templateName: ECS
