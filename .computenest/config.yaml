@@ -178,12 +178,12 @@ Service:
   ServiceType: private
   ServiceInfo:
     - Agreements: []
-      Image: resources/icons/service_logo_zh-CN.png
+      Image: resources/icons/service_logo.png
       Locale: zh-CN
       Name: 雾锁王国-快速部署
       ShortDescription: 《雾锁王国（Enshrouded）》融合了生存、制作以及动作 RPG 战斗，游戏背景设定在了一个基于体素构筑的辽阔大陆。无论是攀登山脉还是跨越沙漠，玩家将可以在这个开放世界中自由选择前进的方向并塑造自己的命运。
     - Agreements: []
-      Image: resources/icons/service_logo_en-US.png
+      Image: resources/icons/service_logo.png
       Locale: en-US
       Name: Enshrouded-Rapid Deployment
       ShortDescription: Enshrouded combines survival, production and action RPG combat, the game is set in a vast continent based on voxel construction. Whether climbing mountains or
