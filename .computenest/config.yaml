@@ -1,145 +1,228 @@
 Service:
-  RegionId: cn-hangzhou
   DeployType: ros
-  OperationMetadata:
-    # 自定义运维操作
-    CustomOperations:
-      Actions:
-      - Type: OOS
-        Name: 升级服务端版本
-        Operator: All
-        TemplateNames:
-        - ECS
-        TemplateUrl: custom_operations/upgrade_server_version.yaml
-      - Type: OOS
-        Name: 重启服务
-        Operator: All
-        TemplateNames:
-        - ECS
-        TemplateUrl: custom_operations/restart_server.yaml
-    StatusOperationConfigs:
-    - TemplateName: ECS
-      SupportOperations:
-      - Start
-      - Stop
-      - Restart
-    SupportBackup: true
-    ##变配部分
-    ModifyParametersConfig:
-    - TemplateName: ECS
-      Operation:
-      - Name: 修改游戏参数
-        Description: 修改游戏参数
-        Type: Custom
-        Parameters:
-        - ServerName
-        - ServerPassword
-      - Name: 变更ECS实例规格
-        Description: 变更ECS实例规格
-        Type: Custom
-        Parameters:
-        - EcsInstanceType
-      - Name: 变更ECS实例密码
-        Description: 变更ECS实例密码
-        Type: Custom
-        Parameters:
-        - InstancePassword
-  #部署相关
   DeployMetadata:
     SupplierDeployMetadata:
-      SupplierTemplateConfigs:
-      - Name: ECS
-        Url: 'ros_templates/template.yaml'
-        ArchitectureDiagramUrl: 'resources/architecture/architecture.jpg'
-        PredefinedParameters:
-        - Name: 热卖：最多支持4个玩家畅玩
-          OrderList:
-          - PayType
-          - EcsInstanceType
-          Type: Normal
-          Parameters:
-            PayType: PrePaid
-            EcsInstanceType:
-            - ecs.e-c1m4.2xlarge
-            SystemDiskCategory: cloud_essd_entry
-            SystemDiskSize: 100
-            InternetChargeType: PayByBandwidth
-            InternetMaxBandwidthOut: 10
-        - Name: 自定义套餐
-          OrderList:
-          - PayType
-          - EcsInstanceType
-          Type: Custom
-          Parameters: {}
-        AllowedRegions:
-        - cn-hangzhou
-        - cn-qingdao
-        - cn-beijing
-        - cn-zhangjiakou
-        - cn-huhehaote
-        - cn-wulanchabu
-        - cn-chengdu
-        - cn-shanghai
-        - cn-nanjing
-        - cn-fuzhou
-        - cn-shenzhen
-        - cn-guangzhou
-        - cn-heyuan
+      DeployTimeout: 7200
       ArtifactRelation:
         windows:
-          ArtifactId: ${Artifact.EcsImage.ArtifactId}
-          ArtifactVersion: draft
+          ArtifactId: ${Artifact.Artifact_1.ArtifactId}
+          ArtifactVersion: ${Artifact.Artifact_1.ArtifactVersion}
+      SupplierTemplateConfigs:
+        - Name: 新建ECS实例
+          Url: ros_templates/template1.yaml
+          PredefinedParameters:
+            - Name: 热卖：最多支持4个玩家畅玩
+              Parameters:
+                PayType: PrePaid
+                EcsInstanceType:
+                  - ecs.e-c1m4.xlarge
+                SystemDiskCategory: cloud_essd_entry
+                SystemDiskSize: 100
+                InternetChargeType: PayByBandwidth
+                InternetMaxBandwidthOut: 10
+              OrderList:
+                - PayType
+                - EcsInstanceType
+                - SystemDiskCategory
+                - SystemDiskSize
+                - InternetChargeType
+                - InternetMaxBandwidthOut
+              Type: Normal
+            - Name: 力荐：最多支持10个玩家畅玩
+              Parameters:
+                PayType: PrePaid
+                EcsInstanceType:
+                  - ecs.e-c1m4.2xlarge
+                SystemDiskCategory: cloud_essd_entry
+                SystemDiskSize: 100
+                InternetChargeType: PayByBandwidth
+                InternetMaxBandwidthOut: 10
+              OrderList:
+                - PayType
+                - EcsInstanceType
+                - SystemDiskCategory
+                - SystemDiskSize
+                - InternetChargeType
+                - InternetMaxBandwidthOut
+              Type: Normal
+            - Name: 自定义套餐
+              Parameters: {}
+              OrderList:
+                - PayType
+                - EcsInstanceType
+                - SystemDiskCategory
+                - SystemDiskSize
+                - InternetChargeType
+                - InternetMaxBandwidthOut
+              Type: Custom
+          AllowedRegions:
+            - cn-shanghai
+            - cn-hangzhou
+            - cn-heyuan
+            - cn-wulanchabu
+            - cn-huhehaote
+            - cn-beijing
+            - cn-shenzhen
+            - cn-nanjing
+            - cn-fuzhou
+            - cn-qingdao
+            - cn-guangzhou
+            - cn-wuhan-lr
+        - Name: 选择ECS实例
+          Url: ros_templates/template2.yaml
+          PredefinedParameters: []
+          AllowedRegions:
+            - cn-qingdao
+            - cn-beijing
+            - cn-huhehaote
+            - cn-wulanchabu
+            - cn-hangzhou
+            - cn-shanghai
+            - cn-nanjing
+            - cn-shenzhen
+            - cn-heyuan
+            - cn-guangzhou
+            - cn-fuzhou
+            - cn-wuhan-lr
     TemplateConfigs:
-    - Name: ECS
-      Url: 'ros_templates/template.yaml'
-      ArchitectureDiagramUrl: 'resources/architecture/architecture.jpg'
-      AllowedRegions:
-      - cn-hangzhou
+      - Name: 新建ECS实例
+        Url: ros_templates/template1.yaml
+        AllowedRegions:
+          - cn-shanghai
+          - cn-hangzhou
+          - cn-heyuan
+          - cn-wulanchabu
+          - cn-huhehaote
+          - cn-beijing
+          - cn-shenzhen
+          - cn-nanjing
+          - cn-fuzhou
+          - cn-qingdao
+          - cn-guangzhou
+          - cn-wuhan-lr
+        PredefinedParameters:
+          - Name: 热卖：最多支持4个玩家畅玩
+            Parameters:
+              PayType: PrePaid
+              EcsInstanceType:
+                - ecs.e-c1m4.xlarge
+              SystemDiskCategory: cloud_essd_entry
+              SystemDiskSize: 100
+              InternetChargeType: PayByBandwidth
+              InternetMaxBandwidthOut: 10
+            OrderList:
+              - PayType
+              - EcsInstanceType
+              - SystemDiskCategory
+              - SystemDiskSize
+              - InternetChargeType
+              - InternetMaxBandwidthOut
+            Type: Normal
+          - Name: 力荐：最多支持10个玩家畅玩
+            Parameters:
+              PayType: PrePaid
+              EcsInstanceType:
+                - ecs.e-c1m4.2xlarge
+              SystemDiskCategory: cloud_essd_entry
+              SystemDiskSize: 100
+              InternetChargeType: PayByBandwidth
+              InternetMaxBandwidthOut: 10
+            OrderList:
+              - PayType
+              - EcsInstanceType
+              - SystemDiskCategory
+              - SystemDiskSize
+              - InternetChargeType
+              - InternetMaxBandwidthOut
+            Type: Normal
+          - Name: 自定义套餐
+            Parameters: {}
+            OrderList:
+              - PayType
+              - EcsInstanceType
+              - SystemDiskCategory
+              - SystemDiskSize
+              - InternetChargeType
+              - InternetMaxBandwidthOut
+            Type: Custom
+        DeployScene: ECS
+        OutputConfigs:
+          - OutputKey: __biubiu__
+            EnableWebProxy: false
+      - Name: 选择ECS实例
+        Url: ros_templates/template2.yaml
+        AllowedRegions:
+          - cn-qingdao
+          - cn-beijing
+          - cn-huhehaote
+          - cn-wulanchabu
+          - cn-hangzhou
+          - cn-shanghai
+          - cn-nanjing
+          - cn-shenzhen
+          - cn-heyuan
+          - cn-guangzhou
+          - cn-fuzhou
+          - cn-wuhan-lr
+        PredefinedParameters: []
+        DeployScene: ECS
+        OutputConfigs:
+          - OutputKey: __biubiu__
+            EnableWebProxy: false
+    NetworkMetadata:
+      EnablePrivateVpcConnection: false
+      EnableReversePrivateVpcConnection: false
+    ServiceInstanceNameRule:
+      Prefix: ws-
+      UseDefaultValue: false
+  ServiceType: private
+  ServiceInfo:
+    - Agreements: []
+      Image: resources/icons/service_logo_zh-CN.png
+      Locale: zh-CN
+      Name: 雾锁王国-快速部署
+      ShortDescription: 《雾锁王国（Enshrouded）》融合了生存、制作以及动作 RPG 战斗，游戏背景设定在了一个基于体素构筑的辽阔大陆。无论是攀登山脉还是跨越沙漠，玩家将可以在这个开放世界中自由选择前进的方向并塑造自己的命运。
+    - Agreements: []
+      Image: resources/icons/service_logo_en-US.png
+      Locale: en-US
+      Name: Enshrouded-Rapid Deployment
+      ShortDescription: Enshrouded combines survival, production and action RPG combat, the game is set in a vast continent based on voxel construction. Whether climbing mountains or
+        crossing deserts, players will be able to freely choose the direction of progress and shape their own destiny in this open world.
+  ShareType: Public
+  ApprovalType: Manual
+Artifact:
+  Artifact_1:
+    ArtifactType: EcsImage
+    ArtifactName: wusuo
+    Description: Enshrouded_image_250311
+    ArtifactProperty:
+      ImageId: m-2vc0pdxegr4ogsei6n36
+      RegionId: cn-chengdu
+    SupportRegionIds:
       - cn-qingdao
       - cn-beijing
       - cn-zhangjiakou
       - cn-huhehaote
       - cn-wulanchabu
-      - cn-chengdu
+      - cn-hangzhou
       - cn-shanghai
       - cn-nanjing
-      - cn-fuzhou
       - cn-shenzhen
-      - cn-guangzhou
       - cn-heyuan
-  ServiceType: private
-  ServiceInfo:
-    # 英文版可以再配置Locale为en-US的服务信息
-  - Locale: zh-CN
-    Name: 雾锁王国-快速部署
-    ShortDescription: 《雾锁王国（Enshrouded）》融合了生存、制作以及动作 RPG 战斗，游戏背景设定在了一个基于体素构筑的辽阔大陆。无论是攀登山脉还是跨越沙漠，玩家将可以在这个开放世界中自由选择前进的方向并塑造自己的命运。
-    Image: resources/icons/service_logo.jpeg
-Artifact:
-  EcsImage:
-    ArtifactType: EcsImage
-    ArtifactName: wusuo
-    Description: Enshrouded_image
-    ArtifactProperty:
-      RegionId: ${ImageBuilder.EcsImage.RegionId}
-      ImageId: ${ImageBuilder.EcsImage.SourceImageId}
-ImageBuilder:
-  EcsImage:
-    RegionId: cn-heyuan
-    SourceImageId: m-f8z3t8e3rsgpznaoc232
-    SystemDiskSize: 100
-    InstanceType: ecs.g7.large
-    InternetMaxBandwidthOut: 100
-    CommandType: RunPowerShellScript
-    Timeout: 10800
-    CommandContent: |-
-      $TaskName = "EnshroudedServerAutoStart"
-      $ProcessName = "enshrouded_server"
-
-      if (Get-Process -Name $ProcessName -ErrorAction SilentlyContinue) {
-        Stop-Process -Name $ProcessName -Force
-        Start-Sleep -Seconds 1
-      }
-      Start-Process "C:\Program Files\EnshroudedServer\steam\steamcmd.exe" -ArgumentList "+login anonymous +app_update 2278520 validate +quit" -Wait
-
-      Start-ScheduledTask -TaskName $TaskName
-      Get-ScheduledTask -TaskName $TaskName
+      - cn-guangzhou
+      - cn-fuzhou
+      - cn-wuhan-lr
+      - cn-chengdu
+      - cn-hongkong
+      - ap-northeast-1
+      - ap-northeast-2
+      - ap-southeast-1
+      - ap-southeast-3
+      - ap-southeast-6
+      - ap-southeast-5
+      - ap-southeast-7
+      - us-east-1
+      - us-west-1
+      - eu-west-1
+      - me-east-1
+      - eu-central-1
